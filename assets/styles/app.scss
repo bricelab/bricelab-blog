@@ -1,0 +1,52 @@
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/animated";
+@import "~@fortawesome/fontawesome-free/scss/stacked";
+//@import "~bootswatch/dist/lux/variables";
+@import "~bootswatch/dist/darkly/variables";
+//@import "~bootswatch/dist/minty/variables";
+@import "~bootstrap/scss/bootstrap";
+//@import "~bootswatch/dist/lux/bootswatch";
+@import "~bootswatch/dist/darkly/bootswatch";
+//@import "~bootswatch/dist/minty/bootswatch";
+@import "~select2";
+//@import "~select2/src/scss/multiple";
+//@import "~select2/src/scss/single";
+//@import "~select2/src/scss/core";
+//@import "~select2/src/scss/theme/default/multiple";
+
+input, textarea, select[multiple='multiple'] option{
+  color: $body-bg !important;
+}
+
+.select2-dropdown {
+  background-color: $body-bg;
+  border-color: $body-bg;
+}
+
+.select2-selection__choice {
+  background-color: $body-bg!important;
+  border-color: $body-bg!important;
+}
+
+.text-justify {
+  text-align: justify !important;
+}
+
+.blog-footer {
+  padding: 2.5rem 0;
+  color: $body-color;
+  text-align: center;
+  background-color: $secondary;
+  border-top: .05rem solid #302f2f;
+}
+
+blockquote {
+  //margin-left: 1.5rem!important;
+  border-left: solid 5px $info!important;
+  padding-left: 20px;
+  color: $info;
+  font-style: oblique;
+}

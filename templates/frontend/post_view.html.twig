@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-3 mb-3">
+        <div class="row g-5">
+            <div class="col-md-9">
+                <article class="blog-post">
+                    <h2 class="blog-post-title">{{ post.title }}</h2>
+                    <p class="blog-post-meta">{{ post.publishedAt|date('d/m/Y') }} by <a href="#">{{ post.author.pseudo }}</a></p>
+{#                    <p class="text-justify">{{ post.summary }}</p>#}
+                    <div>
+                        <img src="{{ post.featuredImage }}" alt="" class="img-fluid w-100">
+                    </div>
+                    <hr>
+                    {{ post.content|raw }}
+
+                </article>
+            </div>
+
+            <div class="col-md-3">
+                <div class="position-sticky" style="top: 2rem;">
+{#                    <div class="p-4 mb-3 bg-light rounded">#}
+{#                        <h4 class="fst-italic">About</h4>#}
+{#                        <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p>#}
+{#                    </div>#}
+
+                    <div class="p-4">
+                        <h4 class="fst-italic">Catégories</h4>
+                        <ol class="list-unstyled mb-0">
+                            {% for category in post.categories %}
+                            <li><a href="#">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+
+                    <div class="p-4">
+                        <h4 class="fst-italic">Mots clés</h4>
+                        <p class="list-unstyled">
+                            {% for tag in post.tags %}
+                                <a href="#">{{ tag.name }}</a>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+{{ post.title }} | {{ parent() }}
+{% endblock %}
+

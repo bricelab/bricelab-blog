@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TagRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Tag
 {
@@ -57,4 +58,11 @@ class Tag
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+
 }

@@ -1,0 +1,30 @@
+{% set flashes = app.flashes %}
+{% if flashes|length > 0 %}
+    {% set delay = 5000 %}
+    {% for type, messages in flashes %}
+        {% for message in messages %}
+            {% if type == 'error' %}
+                {% set type = 'danger' %}
+                {% set title = 'Erreur' %}
+            {% elseif type == 'info' %}
+                {% set type = 'primary' %}
+                {% set title = 'Info' %}
+            {% endif %}
+            <div aria-live="polite" aria-atomic="true" class="bg-dark position-relative">
+                <div class="toast-container position-absolute p-3 top-0 end-0">
+                    <div class="toast text-white bg-{{ type }} border-0" data-bs-delay="{{ delay }}">
+                        <div class="toast-header">
+                            <i class="fas fa-info-circle"></i>
+                            <strong class="me-auto">Succès</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% set delay = delay + 1000 %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
