@@ -1,0 +1,62 @@
+{% set flashes = app.flashes %}
+<script>
+    window.delayStart = 0;
+    window.nbFlashes = 0;
+    window.delayStep = 0;
+</script>
+
+{% if flashes|length > 0 %}
+    {% set delay = 5000 %}
+    {% set delayStep = 500 %}
+    <script>
+        window.delayStart = {{ delay }};
+        window.delayStep = {{ delayStep }};
+    </script>
+    {% set nbFlashes = 0 %}
+    {% set marginTop = 50 %}
+    {% for type, messages in flashes %}
+        {% if type == 'error' %}
+            {% set type = 'danger' %}
+            {% set title = 'Erreur' %}
+        {% elseif type == 'success' %}
+            {% set type = 'success' %}
+            {% set title = 'Succès' %}
+        {% elseif type == 'warning' %}
+            {% set type = 'warning' %}
+            {% set title = 'Attention' %}
+        {% else %}
+            {% set type = 'info' %}
+            {% set title = 'Info' %}
+        {% endif %}
+        {% for message in messages %}
+            <div
+                class="toast show position-absolute top-0 end-0 me-5 bg-{{ type }}"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+                data-bs-delay="{{ delay }}"
+                id="js-toast-{{ delay }}"
+                style="margin-top: {{ marginTop }}px!important;"
+            >
+                <div class="toast-header">
+                    <strong class="me-auto text-{{ type }}">{{ title }}</strong>
+{#                    <small>11 mins ago</small>#}
+                    <button type="button" class="btn-close ms-2 mb-1 js-close-toast" data-bs-dismiss="js-toast-{{ delay }}" aria-label="Close" id="js-close-toast-{{ delay }}">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+            </div>
+
+            {% set delay = delay + delayStep %}
+            {% set nbFlashes = nbFlashes + 1 %}
+            {% set marginTop = marginTop + 130 + 10 %}
+        {% endfor %}
+    {% endfor %}
+    <script>
+        window.nbFlashes = {{ nbFlashes }};
+    </script>
+{% endif %}
+
