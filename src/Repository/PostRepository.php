@@ -31,22 +31,26 @@ class PostRepository extends ServiceEntityRepository
     public function findLatest(int $page = 1, Category $category = null, Tag $tag = null): Paginator
     {
         $qb = $this->createQueryBuilder('p')
-            ->addSelect('a', 'c', 't')
+            ->addSelect('a')
             ->innerJoin('p.author', 'a')
-            ->leftJoin('p.tags', 't')
-            ->leftJoin('p.categories', 'c')
             ->where('p.publishedAt <= :now')
             ->orderBy('p.publishedAt', 'DESC')
             ->setParameter('now', new DateTimeImmutable())
         ;
 
         if (null !== $category) {
-            $qb->andWhere(':category MEMBER OF p.categories')
+            $qb
+                ->addSelect('c.name')
+                ->leftJoin('p.categories', 'c')
+                ->andWhere(':category MEMBER OF p.categories')
                 ->setParameter('category', $category);
         }
 
         if (null !== $tag) {
-            $qb->andWhere(':tag MEMBER OF p.tags')
+            $qb
+                ->addSelect('t.name')
+                ->leftJoin('p.tags', 't')
+                ->andWhere(':tag MEMBER OF p.tags')
                 ->setParameter('tag', $tag);
         }
 

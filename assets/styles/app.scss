@@ -1,3 +1,4 @@
+@import "gotham-pro/style.css";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import "~@fortawesome/fontawesome-free/scss/brands";
 @import "~@fortawesome/fontawesome-free/scss/solid";
@@ -16,6 +17,15 @@
 //@import "~select2/src/scss/single";
 //@import "~select2/src/scss/core";
 //@import "~select2/src/scss/theme/default/multiple";
+
+#brand {
+  //font-family: "Montserat", "Gotham Pro Black", $font-family-sans-serif;
+  //color: $white !important;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 30px;
+}
+
 
 input, textarea, select[multiple='multiple'] option{
   color: $body-bg !important;
@@ -49,4 +59,29 @@ blockquote {
   padding-left: 20px;
   color: $info;
   font-style: oblique;
+}
+
+.badge-primary {
+  background-color: $primary;
+}
+.badge-secondary {
+  background-color: $secondary;
+}
+.badge-success {
+  background-color: $success;
+}
+.badge-warning {
+  background-color: $warning;
+}
+.badge-danger {
+  background-color: $danger;
+}
+.badge-info {
+  background-color: $info;
+}
+.badge-light {
+  background-color: $light;
+}
+.badge-dark {
+  background-color: $dark;
 }
