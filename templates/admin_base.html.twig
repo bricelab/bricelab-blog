@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %} - Administration| BriceLab Blog{% endblock %}</title>
+        <meta name="author" content="Brice Hessou">
+{#        <link rel="icon" href="/favicon.ico?v=001">#}
+        {% block meta %}{% endblock %}
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('admin') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('admin') }}
+        {% endblock %}
+    </head>
+    <body class="">
+        {% include 'backend/components/admin_header.html.twig' %}
+
+        <div class="container-fluid">
+            <div class="row">
+                {% include 'backend/components/admin_sidebar.html.twig' %}
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    {% block body %}{% endblock %}
+                </main>
+            </div>
+        </div>
+
+        {% include 'shared/flash_messages.html.twig' %}
+{#        {% include 'components/footer.html.twig' %}#}
+    </body>
+</html>

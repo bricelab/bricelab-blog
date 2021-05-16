@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block title %}Post{% endblock %}
 
@@ -50,5 +50,5 @@
 
     <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
 
-    {{ include('post/_delete_form.html.twig') }}
+    {{ include('backend/post/_delete_form_button.html.twig') }}
 {% endblock %}

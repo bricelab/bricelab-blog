@@ -14,13 +14,13 @@
     </head>
     <body class="d-flex flex-column h-100">
 {#        <div class="container"></div>#}
-            {% include 'components/header.html.twig' %}
+            {% include 'frontend/components/header.html.twig' %}
 
         <main class="flex-shrink-0">
-            {% include 'components/flash_messages.html.twig' %}
+            {% include 'shared/flash_messages.html.twig' %}
                 {% block body %}{% endblock %}
         </main>
 
-        {% include 'components/footer.html.twig' %}
+        {% include 'frontend/components/footer.html.twig' %}
     </body>
 </html>
