@@ -1,0 +1,23 @@
+<header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ path('app_home') }}">{{ 'BriceLab Blog'|upper }}</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <form action="{{ path('app_home') }}" class="w-100">
+        <input
+                name="q"
+                value="{% if q is defined %}{{ q }}{% endif %}"
+                class="form-control form-control w-100"
+                type="text"
+                placeholder="Rechercher ou filtrer ..."
+                aria-label="Rechercher un arrondissement ...">
+    </form>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="{{ path('app_logout') }}">
+                <i class="bi-door-open-fill"></i>
+                Se déconnecter
+            </a>
+        </li>
+    </ul>
+</header>
