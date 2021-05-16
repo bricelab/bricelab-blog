@@ -1,16 +1,19 @@
 {% extends 'admin_base.html.twig' %}
 
 {% block title %}
-    Ajouter un article {{ parent() }}
+    {{ post.title }} {{ parent() }}
 {% endblock %}
 
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Ajouter un article</h1>
+        <h1 class="h2">{{ post.title }}</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <a href="{{ path('post_index') }}" class="btn btn-primary mx-2">
                 <i class="fas fa-backspace"></i>
             </a>
+{#            {% if is_granted('ROLE_ADMIN') %}#}
+                {{ include('backend/post/_delete_form_button.html.twig') }}
+{#            {% endif %}#}
         </div>
     </div>
 
@@ -18,10 +21,9 @@
         <div class="col-12">
             <div class="card pt-3">
                 <div class="card-body">
-                    {{ include('post/_form.html.twig') }}
+                    {{ include('backend/post/_form.html.twig', {'button_label': 'Modifier'}) }}
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock %}

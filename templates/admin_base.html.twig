@@ -31,18 +31,18 @@
         {% endblock %}
     </head>
     <body class="">
-        {% include 'components/admin_header.html.twig' %}
+        {% include 'backend/components/admin_header.html.twig' %}
 
         <div class="container-fluid">
             <div class="row">
-                {% include 'components/admin_sidebar.html.twig' %}
+                {% include 'backend/components/admin_sidebar.html.twig' %}
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     {% block body %}{% endblock %}
                 </main>
             </div>
         </div>
 
-        {% include 'components/flash_messages.html.twig' %}
+        {% include 'shared/flash_messages.html.twig' %}
 {#        {% include 'components/footer.html.twig' %}#}
     </body>
 </html>

@@ -16,6 +16,11 @@ class Post
 {
     use TimestampTrait;
 
+    public const POST_STATUS_DRAFT = 'post_status.draft';
+    public const POST_STATUS_PUBLISHED = 'post_status.published';
+    public const POST_STATUS_UNPUBLISHED = 'post_status.unpublished';
+    public const POST_STATUS_TRASHED = 'post_status.trashed';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -68,6 +73,11 @@ class Post
      * @ORM\Column(type="datetime", nullable=true)
      */
     private ?DateTimeInterface $publishedAt = null;
+
+    /**
+     * @ORM\Column(type="string", length=255, options={"default": "post_status.draft"})
+     */
+    private string $status = self::POST_STATUS_DRAFT;
 
     public function __construct()
     {
@@ -210,5 +220,22 @@ class Post
         $this->publishedAt = $publishedAt;
 
         return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function isPublished(): bool
+    {
+        return self::POST_STATUS_PUBLISHED === $this->status;
     }
 }

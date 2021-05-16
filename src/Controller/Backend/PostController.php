@@ -4,7 +4,8 @@ namespace App\Controller\Backend;
 
 use App\Entity\Post;
 use App\Entity\User;
-use App\Form\PostType;
+use App\Form\CreatePostType;
+use App\Form\UpdatePostType;
 use App\Repository\PostRepository;
 use App\Services\FileUploaderHelper;
 use App\Services\MessageFlashHelper;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\UX\Dropzone\Form\DropzoneType;
 
 #[Route('/admin/post')]
 class PostController extends AbstractController
@@ -38,8 +41,8 @@ class PostController extends AbstractController
     #[Route('/', name: 'post_index', methods: ['GET'])]
     public function index(Request $request, PostRepository $postRepository): Response
     {
-        return $this->render('post/index.html.twig', [
-            'paginator' => $postRepository->findLatest($request->query->get('page', 1)),
+        return $this->render('backend/post/index.html.twig', [
+            'paginator' => $postRepository->findPaginatedListe($request->query->get('page', 1)),
         ]);
     }
 
@@ -47,7 +50,7 @@ class PostController extends AbstractController
     public function new(Request $request): Response
     {
         $post = new Post();
-        $form = $this->createForm(PostType::class, $post);
+        $form = $this->createForm(CreatePostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -59,7 +62,6 @@ class PostController extends AbstractController
                 $post->setFeaturedImage($featuredImage);
                 $post->setAuthor($user);
                 $post->setSlug($this->slugger->slug($post->getTitle()));
-                $post->setPublishedAt(new DateTimeImmutable());
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($post);
@@ -71,16 +73,16 @@ class PostController extends AbstractController
             }
         }
 
-        return $this->render('post/new.html.twig', [
+        return $this->render('backend/post/new.html.twig', [
             'post' => $post,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id}', name: 'post_show', methods: ['GET'])]
+    #[Route('/{id}/details', name: 'post_show', methods: ['GET'])]
     public function show(Post $post): Response
     {
-        return $this->render('post/show.html.twig', [
+        return $this->render('backend/post/show.html.twig', [
             'post' => $post,
         ]);
     }
@@ -88,32 +90,27 @@ class PostController extends AbstractController
     #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post): Response
     {
-        $form = $this->createForm(PostType::class, $post);
+        $form = $this->createForm(UpdatePostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $featuredImage = $this->fileUploaderHelper->uploadPostFeaturedImage($form->get('featuredImage')->getData(), $post->getFeaturedImage());
+            $post->setSlug($this->slugger->slug($post->getTitle()));
 
-            if ($featuredImage) {
-                $post->setFeaturedImage($featuredImage);
-                $post->setSlug($this->slugger->slug($post->getTitle()));
+            $this->getDoctrine()->getManager()->flush();
 
-                $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Votre article a été mis à jour avec succès.');
 
-                $this->addFlash('success', 'Votre article a été mis à jour avec succès.');
-
-                return $this->redirectToRoute('post_index');
-            }
+            return $this->redirectToRoute('post_index');
 
         }
 
-        return $this->render('post/edit.html.twig', [
+        return $this->render('backend/post/edit.html.twig', [
             'post' => $post,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id}', name: 'post_delete', methods: ['DELETE'])]
+    #[Route('/{id}/delete', name: 'post_delete', methods: ['DELETE'])]
     public function delete(Request $request, Post $post): Response
     {
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
@@ -128,5 +125,69 @@ class PostController extends AbstractController
         }
 
         return $this->redirectToRoute('post_index');
+    }
+
+    #[Route('/publish', name: 'post_publish', methods: ['POST'])]
+    public function publish(Request $request, PostRepository $postRepository): Response
+    {
+        ["postId" => $postId, "status" => $status] = json_decode($request->getContent(), true);
+
+        $post = $postRepository->find($postId);
+
+        if ($post) {
+            if ($status) {
+                $post->setStatus(Post::POST_STATUS_PUBLISHED);
+                $post->setPublishedAt(new DateTimeImmutable());
+            } else {
+                $post->setStatus(Post::POST_STATUS_DRAFT);
+                $post->setPublishedAt(null);
+            }
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->json('Votre article a été publié avec succès.');
+        }
+
+        return $this->json('Aucun article trouvé', Response::HTTP_NOT_FOUND);
+    }
+
+    #[Route('/{id}/edit-featured-image', name: 'post_edit_featured_image', methods: ['GET', 'POST'])]
+    public function editFeaturedImage(Request $request, Post $post): Response
+    {
+        $form = $this->createFormBuilder()
+            ->add('featuredImage', DropzoneType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'mb-3 mt-3',
+                    'placeholder' => 'Glissez & déposez ou Cliquez pour sélectionner',
+                ],
+                'label_attr' => [
+                    'class' => 'mt-3 fw-bold',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+                'mapped' => false,
+            ])->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $featuredImage = $this->fileUploaderHelper->uploadPostFeaturedImage($form->get('featuredImage')->getData(), $post->getFeaturedImage());
+
+            if ($featuredImage) {
+                $post->setFeaturedImage($featuredImage);
+
+                $this->getDoctrine()->getManager()->flush();
+
+                $this->addFlash('success', 'Votre article a été mis à jour avec succès.');
+
+                return $this->redirectToRoute('post_index');
+            }
+        }
+
+        return $this->render('backend/post/edit_featured_image.html.twig', [
+            'post' => $post,
+            'form' => $form->createView(),
+        ]);
     }
 }

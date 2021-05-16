@@ -34,14 +34,14 @@ liip_imagine:
         squared_thumbnail_small:
             filters:
                 thumbnail:
-                    size: [ 200, 200 ]
+                    size: [ 80, 80 ]
                     mode: inset
                     allow_upscale: true
 
         squared_thumbnail_medium:
             filters:
                 thumbnail:
-                    size: [ 500, 500 ]
+                    size: [ 200, 200 ]
                     mode: inset
                     allow_upscale: true
 

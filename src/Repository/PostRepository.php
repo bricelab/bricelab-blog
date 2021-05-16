@@ -34,8 +34,41 @@ class PostRepository extends ServiceEntityRepository
             ->addSelect('a')
             ->innerJoin('p.author', 'a')
             ->where('p.publishedAt <= :now')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', Post::POST_STATUS_PUBLISHED)
             ->orderBy('p.publishedAt', 'DESC')
             ->setParameter('now', new DateTimeImmutable())
+        ;
+
+        if (null !== $category) {
+            $qb
+                ->addSelect('c.name')
+                ->leftJoin('p.categories', 'c')
+                ->andWhere(':category MEMBER OF p.categories')
+                ->setParameter('category', $category);
+        }
+
+        if (null !== $tag) {
+            $qb
+                ->addSelect('t.name')
+                ->leftJoin('p.tags', 't')
+                ->andWhere(':tag MEMBER OF p.tags')
+                ->setParameter('tag', $tag);
+        }
+
+        return (new Paginator($qb))->paginate($page);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function findPaginatedListe(int $page = 1, Category $category = null, Tag $tag = null): Paginator
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->addSelect('a')
+            ->innerJoin('p.author', 'a')
+            ->orderBy('p.updatedAt', 'DESC')
+            ->orderBy('p.publishedAt', 'DESC')
         ;
 
         if (null !== $category) {
