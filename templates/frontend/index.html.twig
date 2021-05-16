@@ -23,6 +23,9 @@
                     {% for post in posts.results %}
                         <div class="col-md-6">
                             <div class="row g-0 border border-secondary shadow overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                                <div class="col-auto d-none d-lg-block">
+                                    <img src="{{ asset("/posts/images/featured/" ~ post.featuredImage) | imagine_filter('home_post_image_card_thumbnail') }}" class="" alt="Thumbnail" width="150" height="100%">
+                                </div>
                                 <div class="col p-4 d-flex flex-column position-static" style="min-height: 250px">
                                     <strong class="d-inline-block mb-2 text-primary">par {{ post.author.pseudo }}</strong>
                                     <h3 class="mb-0 h4">{{ post.title[0:40] }}{% if post.title|length > 40 %}...{% endif %}</h3>
@@ -31,9 +34,6 @@
                                     <a href="{{ path('app_post_view', {
                                         slug: post.slug
                                     }) }}" class="stretched-link">Lire la suite ...</a>
-                                </div>
-                                <div class="col-auto d-none d-lg-block">
-                                    <img src="{{ post.featuredImage }}" class="" alt="Thumbnail" width="150" height="100%">
                                 </div>
                             </div>
                         </div>

@@ -48,7 +48,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
                 )
                 ->setSummary($summary)
                 ->setContent($faker->paragraph(mt_rand(50, 250)))
-                ->setFeaturedImage($faker->imageUrl(height: 300))
+//                ->setFeaturedImage($faker->imageUrl(height: 300))
+                ->setFeaturedImage(sprintf("https://picsum.photos/id/%s/640/300", mt_rand(100, 1000)))
                 ->setAuthor($user)
                 ->setPublishedAt($faker->dateTimeBetween('-3 months', '+1 day'))
             ;

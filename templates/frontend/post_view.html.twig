@@ -9,7 +9,8 @@
                     <p class="blog-post-meta">{{ post.publishedAt|date('d/m/Y') }} by <a href="#">{{ post.author.pseudo }}</a></p>
 {#                    <p class="text-justify">{{ post.summary }}</p>#}
                     <div>
-                        <img src="{{ post.featuredImage }}" alt="" class="img-fluid w-100">
+{#                        <img src="{{ post.featuredImage }}" alt="" class="img-fluid w-100">#}
+                        <img src="{{ asset("/posts/images/featured/" ~ post.featuredImage) | imagine_filter('view_post_image_thumbnail') }}" alt="" class="img-fluid w-100">
                     </div>
                     <hr>
                     {{ post.content|raw }}

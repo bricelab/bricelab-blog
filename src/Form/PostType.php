@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\UX\Dropzone\Form\DropzoneType;
 
 class PostType extends AbstractType
 {
@@ -30,8 +31,48 @@ class PostType extends AbstractType
                     new NotNull(),
                     new NotBlank(),
                 ],
+                'label_attr' => [
+                    'class' => 'fw-bold',
+                ],
             ])
-//            ->add('slug')
+            ->add('categories', EntityType::class, [
+                'label' => 'Liste des catégories',
+                'class' => Category::class,
+//                'choices' => $this->repository->findBy([], ['nom' => 'ASC']),
+                'attr' => [
+                    'class' => 'mb-3 js-select2',
+                ],
+                'multiple' => true,
+                'label_attr' => [
+                    'class' => 'fw-bold',
+                ],
+            ])
+            ->add('tags', EntityType::class, [
+                'label' => 'Liste des mots clés',
+                'class' => Tag::class,
+//                'choices' => $this->repository->findBy([], ['nom' => 'ASC']),
+                'attr' => [
+                    'class' => 'mb-3 js-select2',
+                ],
+                'multiple' => true,
+                'label_attr' => [
+                    'class' => 'mt-3 fw-bold',
+                ]
+            ])
+            ->add('featuredImage', DropzoneType::class, [
+                'label' => 'Image à la une',
+                'attr' => [
+                    'class' => 'mb-3',
+                    'placeholder' => 'Glissez & déposez ou Cliquez pour sélectionner',
+                ],
+                'label_attr' => [
+                    'class' => 'mt-3 fw-bold',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+                'mapped' => false,
+            ])
             ->add('summary', TextareaType::class, [
                 'label' => 'Résumé succinct',
                 'attr' => [
@@ -41,6 +82,9 @@ class PostType extends AbstractType
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
+                ],
+                'label_attr' => [
+                    'class' => 'mt-3 fw-bold',
                 ],
             ])
             ->add('content', CKEditorType::class, [
@@ -52,31 +96,9 @@ class PostType extends AbstractType
                     new NotNull(),
                     new NotBlank(),
                 ],
-            ])
-//            ->add('featuredImage')
-            ->add('categories', EntityType::class, [
-                'label' => 'Liste des catégories',
-                'class' => Category::class,
-//                'choices' => $this->repository->findBy([], ['nom' => 'ASC']),
-                'attr' => [
-                    'class' => 'mb-3 js-select2',
-                ],
-                'multiple' => true,
                 'label_attr' => [
-                    'class' => 'mt-3',
-                ]
-            ])
-            ->add('tags', EntityType::class, [
-                'label' => 'Liste des mots clés',
-                'class' => Tag::class,
-//                'choices' => $this->repository->findBy([], ['nom' => 'ASC']),
-                'attr' => [
-                    'class' => 'mb-3 js-select2',
+                    'class' => 'fw-bold',
                 ],
-                'multiple' => true,
-                'label_attr' => [
-                    'class' => 'mt-3',
-                ]
             ])
         ;
     }
